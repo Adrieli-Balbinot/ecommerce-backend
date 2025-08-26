@@ -3,7 +3,7 @@ import { Brand } from "./brand.entity";
 import { BrandService } from "./brand.service";
 
 
-@Controller('categories')
+@Controller('brands')
 export class BrandController {
 
     constructor(private readonly service: BrandService) { }
