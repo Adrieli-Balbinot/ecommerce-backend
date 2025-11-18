@@ -3,7 +3,7 @@ import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, Up
 import { Product } from './../../products/product.entity';
 import { Order } from "./order.entity";
 
-@Entity('order')
+@Entity('order_item')
 export class OrderItem {
     @PrimaryGeneratedColumn('uuid')
     id: string;

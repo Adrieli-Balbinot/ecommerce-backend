@@ -15,7 +15,7 @@ export class CustomerService {
         return this.repository.find();
     }
 
-    findByID(id: string): Promise<Customer | null> {
+    findById(id: string): Promise<Customer | null> {
         return this.repository.findOneBy({ id: id });
     }
 
@@ -26,4 +26,9 @@ export class CustomerService {
     async remove(id: string) {
         await this.repository.delete(id);
     }
+
+    async findByAuthId(authId: string): Promise<Customer | null> {
+        return this.repository.findOne({ where: { authId } });
+    }
+
 }

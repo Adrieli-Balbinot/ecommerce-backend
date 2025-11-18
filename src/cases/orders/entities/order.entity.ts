@@ -26,8 +26,8 @@ export class Order {
     @Column('enum', { enum: OrderStatus, default: OrderStatus.NEW })
     status: string;
 
-    @Column({ length: 250, nullable: false })
-    total: string;
+    @Column('decimal', { nullable: true, precision: 10, scale: 2 })
+    total: number;
 
     @OneToMany(() => OrderItem, (item) => item.order, {
         eager: true,

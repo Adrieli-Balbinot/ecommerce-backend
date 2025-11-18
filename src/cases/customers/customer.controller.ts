@@ -56,4 +56,9 @@ export class CustomerController {
         return this.service.remove(id);
 
     }
+
+    @Get('by-auth/:authId')
+    findByAuth(@Param('authId') authId: string) {
+        return this.service.findByAuthId(authId);
+    }
 }
