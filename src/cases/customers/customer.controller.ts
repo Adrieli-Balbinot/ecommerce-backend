@@ -15,7 +15,7 @@ export class CustomerController {
 
     @Get(':id')
     async findById(@Param('id', ParseUUIDPipe) id: string): Promise<Customer | null> {
-        const found = this.service.findByID(id);
+        const found = this.service.findById(id);
 
         if (!found) {
             throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
@@ -26,13 +26,14 @@ export class CustomerController {
 
     @Post()
     create(@Body() customer: Customer): Promise<Customer> {
+        console.log('Creating customer:', customer);
         return this.service.save(customer);
     }
 
     @Put(':id')
     async update(@Param('id', ParseUUIDPipe) id: string, @Body() customer: Customer): Promise<Customer> {
 
-        const found = await this.service.findByID(id);
+        const found = await this.service.findById(id);
 
         if (!found) {
             throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
@@ -47,7 +48,7 @@ export class CustomerController {
     @HttpCode(204)
     async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
 
-        const found = await this.service.findByID(id);
+        const found = await this.service.findById(id);
 
         if (!found) {
             throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);

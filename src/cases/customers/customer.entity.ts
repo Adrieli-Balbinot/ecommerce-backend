@@ -9,10 +9,10 @@ export class Customer {
     @Column({ length: 60, nullable: false })
     name: string;
 
-    @Column({ length: 250, nullable: false })
+    @Column({ length: 250, nullable: true })
     address: string;
 
-    @Column({ length: 8, nullable: false })
+    @Column({ length: 8, nullable: true })
     zipcode: string;
 
     @ManyToOne(() => City, { eager: true, nullable: true })
