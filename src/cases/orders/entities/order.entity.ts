@@ -5,7 +5,7 @@ import { OrderItem } from "./order-item.entity";
 enum OrderStatus {
     NEW = 'NEW',
     SEPARATION = 'SEPARATION',
-    INVOINCED = '',
+    INVOINCED = 'INVOINCED',
     SHIPPED = 'SHIPPED',
     DELIVERED = 'DELIVERED',
     CANCELED = 'CANCELED'

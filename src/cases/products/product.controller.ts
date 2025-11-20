@@ -2,28 +2,18 @@ import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Par
 import { Product } from "./product.entity";
 import { ProductService } from "./product.service";
 import { Category } from "../categories/category.entity";
-import { CategoryService } from "../categories/category.service";
-
 
 @Controller('products')
 export class ProductController {
 
     constructor(
         private readonly service: ProductService,
-        private readonly categoryService: CategoryService,
     ) { }
 
     @Get()
     findAll(): Promise<Product[]> {
         return this.service.findAll();
     }
-
-    // @Get()
-    // async findAll(@Query('categoryId', ParseUUIDPipe) categoryId: string): Promise<Product[]> {
-    //     const category = await this.categoryService.findByID(categoryId);
-
-    //     return this.service.findAll(category ? category : undefined);
-    // }
 
     @Get(':id')
     async findById(@Param('id', ParseUUIDPipe) id: string): Promise<Product | null> {
@@ -67,5 +57,31 @@ export class ProductController {
 
         return this.service.remove(id);
 
+    }
+
+
+    @Post(':id/rating')
+    async rateProduct(
+        @Param('id', ParseUUIDPipe) id: string,
+        @Body('rating') rating: number
+    ) {
+        if (!rating || rating < 1 || rating > 5) {
+            throw new HttpException('Rating should be between 1 and 5', HttpStatus.BAD_REQUEST);
+        }
+
+        const product = await this.service.findByID(id);
+
+        if (!product) {
+            throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+        }
+
+        const newAverage =
+            (product.rating * product.ratingsCount + rating) /
+            (product.ratingsCount + 1);
+
+        product.rating = newAverage;
+        product.ratingsCount = product.ratingsCount + 1;
+
+        return this.service.save(product);
     }
 }

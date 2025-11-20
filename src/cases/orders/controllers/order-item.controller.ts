@@ -4,9 +4,9 @@ import { OrderItemService } from "../service/order-item.service";
 
 @Controller('order-items')
 export class OrderItemController {
-    constructor (
+    constructor(
         private readonly service: OrderItemService
-    ) {}
+    ) { }
 
     @Get()
     findAll(): Promise<OrderItem[]> {
@@ -16,7 +16,7 @@ export class OrderItemController {
     @Get(':id')
     async findById(@Param('id', ParseUUIDPipe) id: string): Promise<OrderItem> {
         const found = await this.service.findById(id);
-        
+
         if (!found) {
             throw new HttpException('Item not found', HttpStatus.NOT_FOUND);
         }
@@ -32,7 +32,7 @@ export class OrderItemController {
     @Put(':id')
     async update(@Param('id', ParseUUIDPipe) id: string, @Body() orderItem: OrderItem): Promise<OrderItem> {
         const found = await this.service.findById(id);
-        
+
         if (!found) {
             throw new HttpException('Item not found', HttpStatus.NOT_FOUND);
         }
@@ -46,7 +46,7 @@ export class OrderItemController {
     @HttpCode(204)
     async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
         const found = await this.service.findById(id);
-        
+
         if (!found) {
             throw new HttpException('Item not found', HttpStatus.NOT_FOUND);
         }

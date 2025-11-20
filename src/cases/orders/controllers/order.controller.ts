@@ -7,63 +7,69 @@ import { Order } from "../entities/order.entity";
 @Controller('orders')
 export class OrderController {
 
-  constructor(
-    private readonly customerService: CustomerService,
-    private readonly service: OrderService
-  ) {}
+    constructor(
+        private readonly customerService: CustomerService,
+        private readonly service: OrderService
+    ) { }
 
-  @Get()
-  async find(@Query('customerId') customerId: string): Promise<Order[]> {
-    if (customerId && isUUID(customerId)) {
-      const customer = await this.customerService.findById(customerId);
-      if (!customer) { 
-        return [];
-      }
-      return this.service.findAll(customer);
+    @Get()
+    async find(@Query('customerId') customerId: string): Promise<Order[]> {
+        console.log("customerId recebido na controller:", customerId);
+        if (customerId && isUUID(customerId)) {
+            const customer = await this.customerService.findById(customerId);
+            if (!customer) {
+                return [];
+            }
+            return this.service.findAll(customer);
+        }
+
+        return this.service.findAll();
     }
 
-    return this.service.findAll();
-  }
-
-  @Get(':id')
-  async findById(@Param('id', ParseUUIDPipe) id: string): Promise<Order> {
-    const found = await this.service.findById(id);
-
-    if (!found) {
-      throw new HttpException('Order not found', HttpStatus.NOT_FOUND);
+    @Get('entregues/:idUser')
+    async listDelivered(@Param('idUser') idUser: string): Promise<Order[]> {
+        return this.service.listEntregues(idUser);
     }
 
-    return found;
-  }
- 
-  @Post()
-  create(@Body() order: Order) : Promise<Order> {
-    return this.service.save(order);
-  }
+    @Get(':id')
+    async findById(@Param('id', ParseUUIDPipe) id: string): Promise<Order> {
+        const found = await this.service.findById(id);
 
-  @Put(':id')
-  async update(@Param('id', ParseUUIDPipe) id: string, @Body() order: Order): Promise<Order> {
-    const found = await this.service.findById(id);
+        if (!found) {
+            throw new HttpException('Order not found', HttpStatus.NOT_FOUND);
+        }
 
-    if (!found) {
-      throw new HttpException('Order not found', HttpStatus.NOT_FOUND);
+        return found;
     }
 
-    order.id = id;
-
-    return this.service.save(order);
-  }
-
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    const found = await this.service.findById(id);
-
-    if (!found) {
-      throw new HttpException('Order not found', HttpStatus.NOT_FOUND);
+    @Post()
+    create(@Body() order: Order): Promise<Order> {
+        return this.service.save(order);
     }
 
-    return this.service.remove(id);
-  }
+    @Put(':id')
+    async update(@Param('id', ParseUUIDPipe) id: string, @Body() order: Order): Promise<Order> {
+        const found = await this.service.findById(id);
+
+        if (!found) {
+            throw new HttpException('Order not found', HttpStatus.NOT_FOUND);
+        }
+
+        order.id = id;
+
+        return this.service.save(order);
+    }
+
+    @Delete(':id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+        const found = await this.service.findById(id);
+
+        if (!found) {
+            throw new HttpException('Order not found', HttpStatus.NOT_FOUND);
+        }
+
+        return this.service.remove(id);
+    }
 }
 

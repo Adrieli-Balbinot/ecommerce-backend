@@ -14,7 +14,7 @@ export class OrderService {
 
 
     findAll(custommer?: Customer): Promise<Order[]> {
-
+        console.log("custommer no order.service: " + custommer)
         if (!custommer) {
             return this.repository.find();
         } else {
@@ -27,14 +27,9 @@ export class OrderService {
 
     }
 
-    // findAll(): Promise<Order[]> {
-    //     return this.repository.find();
-    // }
-
     findById(id: string): Promise<Order | null> {
         return this.repository.findOneBy({ id: id });
     }
-
 
     save(order: Order): Promise<Order> {
         const total = order.items.reduce((sum, item) => {
@@ -48,5 +43,13 @@ export class OrderService {
 
     async remove(id: string): Promise<void> {
         await this.repository.delete(id);
+    }
+
+    async listEntregues(idUser: string): Promise<Order[]> {
+        console.log('listEntregues chamado no service')
+        return this.repository.find({
+            where: { status: 'DELIVERED', custommer: { id: idUser } },
+            relations: ['items'] 
+        });
     }
 }
