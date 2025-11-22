@@ -14,7 +14,6 @@ export class OrderController {
 
     @Get()
     async find(@Query('customerId') customerId: string): Promise<Order[]> {
-        console.log("customerId recebido na controller:", customerId);
         if (customerId && isUUID(customerId)) {
             const customer = await this.customerService.findById(customerId);
             if (!customer) {

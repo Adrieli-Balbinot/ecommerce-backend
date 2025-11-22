@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { Not, Repository } from "typeorm";
 import { Order } from "../entities/order.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
@@ -13,20 +13,22 @@ export class OrderService {
     ) { }
 
 
-    findAll(custommer?: Customer): Promise<Order[]> {
-        console.log("custommer no order.service: " + custommer)
-        if (!custommer) {
-            return this.repository.find();
-        } else {
-            return this.repository.find({
-                where: {
-                    custommer: custommer
-                }
-            });
-        }
-
+findAll(custommer?: Customer): Promise<Order[]> {
+    if (!custommer) {
+        return this.repository.find({
+            where: {
+                status: Not("DELIVERED")
+            }
+        });
+    } else {
+        return this.repository.find({
+            where: {
+                custommer: custommer,
+                status: Not("DELIVERED")
+            }
+        });
     }
-
+}
     findById(id: string): Promise<Order | null> {
         return this.repository.findOneBy({ id: id });
     }
